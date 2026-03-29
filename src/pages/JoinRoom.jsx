@@ -91,7 +91,6 @@ function JoinRoom() {
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="font-semibold text-gray-900">{expert.nom}</div>
-                      <div className="text-xs text-gray-500">{expert.specialty}</div>
                     </div>
                     {selectedExpert?.name === expert.name && (
                       <svg className="w-5 h-5 text-rose-500 flex-shrink-0" fill="currentColor" viewBox="0 0 20 20">
