@@ -1,0 +1,14 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(npm install:*)",
+      "Bash(npm --version)",
+      "Bash(brew --prefix)",
+      "Read(//opt/homebrew/bin/**)",
+      "Read(//usr/local/Homebrew/bin/**)",
+      "Bash(curl -o- https://raw.githubusercontent.com/nvm-sh/nvm/v0.39.7/install.sh)",
+      "Bash(bash)",
+      "Bash(sudo rm:*)"
+    ]
+  }
+}
