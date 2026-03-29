@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { EXPERTS } from '../constants/experts';
+import { generateToken } from '../utils/token';
 
 function JoinRoom() {
   const navigate = useNavigate();
@@ -26,26 +27,10 @@ function JoinRoom() {
     setLoading(true);
 
     try {
-      const room = selectedExpert.name;
-      const response = await fetch('/api/token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          identity: name.trim(),
-          room,
-          role: 'client',
-        }),
-      });
+      const token = await generateToken(name.trim(), selectedExpert.page);
 
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Erreur lors de la connexion');
-      }
-
-      const { token } = await response.json();
-
-      navigate(`/consultation/${encodeURIComponent(room)}`, {
-        state: { token, identity: name.trim(), role: 'client', expert: room },
+      navigate(`/consultation/${selectedExpert.page}`, {
+        state: { token, identity: name.trim(), role: 'client', expert: selectedExpert.page },
       });
     } catch (err) {
       setError(err.message || 'Impossible de rejoindre la consultation.');
@@ -105,7 +90,7 @@ function JoinRoom() {
                       <span className="text-white font-bold text-lg">{expert.name[0]}</span>
                     </div>
                     <div className="flex-1 min-w-0">
-                      <div className="font-semibold text-gray-900">{expert.name}</div>
+                      <div className="font-semibold text-gray-900">{expert.nom}</div>
                       <div className="text-xs text-gray-500">{expert.specialty}</div>
                     </div>
                     {selectedExpert?.name === expert.name && (
@@ -140,7 +125,7 @@ function JoinRoom() {
                   Connexion en cours...
                 </span>
               ) : selectedExpert ? (
-                `Consulter ${selectedExpert.name}`
+                `Consulter ${selectedExpert.nom}`
               ) : (
                 'Choisissez une experte'
               )}

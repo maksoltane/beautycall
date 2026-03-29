@@ -1,4 +1,4 @@
-import { useEffect, useState } from 'react';
+import { useState } from 'react';
 import { useParams, useLocation, useNavigate } from 'react-router-dom';
 import {
   LiveKitRoom,
@@ -6,6 +6,7 @@ import {
   RoomAudioRenderer,
 } from '@livekit/components-react';
 import '@livekit/components-styles';
+import { generateToken } from '../utils/token';
 
 const LIVEKIT_URL = import.meta.env.VITE_LIVEKIT_URL || 'wss://vision360-x3hyaivg.livekit.cloud';
 
@@ -34,23 +35,8 @@ function ConsultationRoom() {
     setError('');
 
     try {
-      const response = await fetch('/api/token', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({
-          identity: name.trim(),
-          room: expertName,
-          role: 'client',
-        }),
-      });
-
-      if (!response.ok) {
-        const data = await response.json();
-        throw new Error(data.error || 'Erreur lors de la connexion');
-      }
-
-      const data = await response.json();
-      setToken(data.token);
+      const jwt = await generateToken(name.trim(), expertName);
+      setToken(jwt);
       setNeedsAuth(false);
     } catch (err) {
       setError(err.message || 'Impossible de rejoindre la consultation.');
